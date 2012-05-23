@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
 
 import org.newdawn.slick.geom.Vector2f;
 
@@ -16,7 +15,7 @@ import com.openorpg.simpleorpg.client.components.DrawableText;
 import com.openorpg.simpleorpg.client.components.Location;
 import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.ResourceRef;
-import com.openorpg.simpleorpg.client.components.Say;
+import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Warp;
 
@@ -119,33 +118,33 @@ public class NetworkingSystem extends BaseEntityProcessingSystem {
 			if (idIndex+1 < message.length()) {
 				payload = message.substring(idIndex+1);
 			}
-			
-			// BROADCAST:#FFFFFF,msg
-			if (id.equals("BROADCAST")) {
-				logger.info("[broadcast] " + payload);
-				
-				if (payload.contains(",") && payload.indexOf(",")+1 < payload.length()) {
-					Entity broadcastEntity = world.createEntity();
-					broadcastEntity.setGroup("BROADCAST");
-					String broadcastMsg = payload.substring(payload.indexOf(",")+1);
-					String color = payload.split(",")[0];
-					broadcastEntity.addComponent(new ColorComponent(color));
-					broadcastEntity.addComponent(new DrawableText(broadcastMsg));
-					broadcastEntity.addComponent(new Timer(15 * 1000));
-					broadcastEntity.refresh();
+			// CHAT:type,color,message,[playerid]
+			if (id.equals("CHAT")) {
+				logger.info("[chat] " + payload);
+				String payloadParts[] = payload.split(",");
+				if (payloadParts.length >= 3) {
+					Entity chatEntity = world.createEntity();
+					chatEntity.setGroup("CHAT");
+					// SAY or BROADCAST
+					String chatType = payloadParts[0];
+					String color = payloadParts[1];
+					chatEntity.addComponent(new ColorComponent(color));
+					String chatMsg = "";
+					
+					if (chatType.equals("BROADCAST")) {
+						chatMsg = payload.substring(payload.indexOf(color) + color.length() + 1);
+						chatEntity.addComponent(new Timer(15 * 1000));
+					} else if (chatType.equals("SAY")) {
+						String playerId = payloadParts[2];
+						chatMsg = payload.substring(payload.indexOf(playerId) + playerId.length() + 1);
+						String bubbleMsg = chatMsg.substring(chatMsg.indexOf(":") + 1).trim();
+						Entity player = world.getTagManager().getEntity(playerId);
+						player.addComponent(new ChatBubble(bubbleMsg, 15 * 1000));
+					}
+					chatEntity.addComponent(new DrawableText(chatMsg));
+					chatEntity.refresh();
 				} else {
-					logger.warn("Invalid BROADCAST:#FFFFFF,msg");
-				}
-			// SAY:playerid,msg
-			} else if (id.equals("SAY")) {
-				logger.info("[say] " + payload);
-				
-				if (payload.contains(",") && payload.indexOf(",")+1 < payload.length()) {
-					String playerId = payload.split(",")[0];
-					String sayMsg = payload.substring(payload.indexOf(",")+1);
-					world.getTagManager().getEntity(playerId).addComponent(new Say(sayMsg, 15 * 1000));
-				} else {
-					logger.warn("Invalid SAY:playerid,msg");
+					logger.warn("Invalid CHAT:playerid,type,color,message");
 				}
 			// WARP:mapref,x,y
 			} else if (id.equals("WARP")) {

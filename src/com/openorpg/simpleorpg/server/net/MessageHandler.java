@@ -38,8 +38,8 @@ public abstract class MessageHandler {
 		
 		if (id.equals("MOVE")) {
 			return new MoveHandler(payload);
-		} else if (id.equals("SAY")) {
-			return new SayHandler(payload);
+		} else if (id.equals("CHAT")) {
+			return new ChatHandler(payload);
 		} else {
 			
 		}

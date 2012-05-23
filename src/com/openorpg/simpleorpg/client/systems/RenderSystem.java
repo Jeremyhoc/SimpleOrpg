@@ -1,5 +1,6 @@
 package com.openorpg.simpleorpg.client.systems;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -18,8 +19,9 @@ import com.openorpg.simpleorpg.client.components.Fade;
 import com.openorpg.simpleorpg.client.components.Location;
 import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.ResourceRef;
-import com.openorpg.simpleorpg.client.components.Say;
+import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
+import com.openorpg.simpleorpg.client.components.Visibility;
 import com.openorpg.simpleorpg.managers.ResourceManager;
 
 public class RenderSystem extends BaseEntitySystem {
@@ -29,13 +31,14 @@ public class RenderSystem extends BaseEntitySystem {
 	private ComponentMapper<ColorComponent> colorMapper;
 	private ComponentMapper<Networking> networkingMapper;
 	private ComponentMapper<DrawableText> drawableTextMapper;
-	private ComponentMapper<Timer> timerMapper;
-	private ComponentMapper<Say> sayMapper;
+	private ComponentMapper<ChatBubble> chatBubbleMapper;
 	private ComponentMapper<Fade> fadeMapper;
 	private TrueTypeFont broadcastFont;
 	private TrueTypeFont nameFont;
 	private TrueTypeFont inputFont;
 	private TrueTypeFont saysFont;
+	private TrueTypeFont chatFont;
+	private ComponentMapper<Visibility> visibilityMapper;
 
 	@SuppressWarnings("unchecked")
 	public RenderSystem(GameContainer container) {
@@ -50,13 +53,14 @@ public class RenderSystem extends BaseEntitySystem {
 		locationMapper = new ComponentMapper<Location>(Location.class, world);
 		colorMapper = new ComponentMapper<ColorComponent>(ColorComponent.class, world);
 		networkingMapper = new ComponentMapper<Networking>(Networking.class, world);
-		timerMapper = new ComponentMapper<Timer>(Timer.class, world);
-		sayMapper = new ComponentMapper<Say>(Say.class, world);
+		chatBubbleMapper = new ComponentMapper<ChatBubble>(ChatBubble.class, world);
 		fadeMapper = new ComponentMapper<Fade>(Fade.class, world);
+		visibilityMapper = new ComponentMapper<Visibility>(Visibility.class, world);
 		broadcastFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 14), false);
 		saysFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 12), false);
 		nameFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.PLAIN, 12), false);
-		inputFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.PLAIN, 12), false);
+		inputFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 12), false);
+		chatFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.PLAIN, 14), false);
 	}
 
 
@@ -71,7 +75,7 @@ public class RenderSystem extends BaseEntitySystem {
 		ImmutableBag<Entity> maps = world.getGroupManager().getEntities("MAP");
 		ImmutableBag<Entity> players = world.getGroupManager().getEntities("PLAYER");
 		ImmutableBag<Entity> broadcasts = world.getGroupManager().getEntities("BROADCAST");
-		ImmutableBag<Entity> says = world.getGroupManager().getEntities("SAY");
+		ImmutableBag<Entity> chats = world.getGroupManager().getEntities("CHAT");
 		ResourceManager manager = ResourceManager.getInstance();
 		int tw = 32, th = 32;
 		
@@ -118,7 +122,7 @@ public class RenderSystem extends BaseEntitySystem {
 			
 
 			
-			// Render player names and say text
+			// Render player names and bubble text
 			for (int i=0; i<players.size(); i++) {
 				Entity playerEntity = players.get(i);
 				DrawableText drawableText = drawableTextMapper.get(playerEntity);
@@ -130,18 +134,71 @@ public class RenderSystem extends BaseEntitySystem {
 					int w = nameFont.getWidth(playerName);
 					nameFont.drawString(playerPosition.x*tw - w/2 + tw/2, playerPosition.y*th - h, playerName, Color.white);
 					
-					if (sayMapper.get(playerEntity) != null) {
-						Say playerSay = sayMapper.get(playerEntity);
-					    w = saysFont.getWidth(playerSay.getText());
+					if (chatBubbleMapper.get(playerEntity) != null) {
+						ChatBubble chatBubble = chatBubbleMapper.get(playerEntity);
+					    w = saysFont.getWidth(chatBubble.getText());
 						h = saysFont.getLineHeight();
 						
-						graphics.setColor(new Color(0,0,0,100));
-						graphics.fillRoundRect(playerPosition.x*tw - w/2 + tw/2 - 3,  playerPosition.y*th - (int)(h*2.5) - 3, w + 6, h + 6, 5);
-						graphics.setColor(new Color(255,255,255,100));
-						saysFont.drawString(playerPosition.x*tw - w/2 + tw/2, playerPosition.y*th - (int)(h*2.5), playerSay.getText());
+						// Word wrap the bubbles
+						int bubbleWidth = 150;
+						int curX = 0;
+						int curY = 0;
+						int startX = (int)playerPosition.x*tw - w/2 + tw/2;
+						int startY = (int)playerPosition.y*th - (int)(h*2.5);
+						String chatWords[] = chatBubble.getText().split(" ");
 						
-						if (playerSay.isFinished()) {
-							playerEntity.removeComponent(playerSay);
+						ArrayList<String> lines = new ArrayList<String>();
+						String line = "";
+						
+						// Split words into lines
+						for (String word : chatWords) {
+							word += " ";
+							
+							// If the individual word is too long, limit it
+							if (saysFont.getWidth(word) >= bubbleWidth) { 
+								String st = "";
+								for (char c : word.toCharArray()) {
+									if (saysFont.getWidth(st+c+" ") < bubbleWidth) {
+										st += c;
+									} else {
+										word = st + " ";
+										break;
+									}
+								}
+							}
+							
+							curX += saysFont.getWidth(word);
+							if (curX >= bubbleWidth) {
+								curX = saysFont.getWidth(word);
+								lines.add(line);
+								line = word;
+							} else {
+								line += word;
+							}
+						}
+						if (!line.equals("")) lines.add(line);
+						
+						
+						// Render the background bubble
+						graphics.setColor(new Color(0,0,0,100));
+						if (w > bubbleWidth) {
+							startX = (int)playerPosition.x*tw - bubbleWidth/2 + tw/2;
+							graphics.fillRoundRect(startX - 5, startY - (h * (lines.size()-1)) - 3, bubbleWidth + 6, lines.size()*h + 6, 5);
+						} else {
+							graphics.fillRoundRect(startX - 5, startY - (h * (lines.size()-1)) - 3, w + 6, lines.size()*h + 6, 5);
+						}
+						
+						// Render each individual line
+						for (int x=lines.size()-1; x>=0; x--) {
+							startX = (int)playerPosition.x*tw - saysFont.getWidth(lines.get(x))/2 + tw/2;
+							graphics.setColor(new Color(255,255,255,255));
+							saysFont.drawString(startX, startY + curY, lines.get(x));
+							curY -= h;
+						}
+						
+						// If time has elapsed
+						if (chatBubble.isFinished()) {
+							playerEntity.removeComponent(chatBubble);
 							playerEntity.refresh();
 						}
 					}
@@ -180,32 +237,37 @@ public class RenderSystem extends BaseEntitySystem {
 					}
 				}
 			}
-
-			
-			// Render broadcast text
-			for (int i=0; i<broadcasts.size(); i++) {
-				Entity broadcastEntity = broadcasts.get(i);
-				Color color = colorMapper.get(broadcastEntity).getColor();
-	
-				String message = drawableTextMapper.get(broadcastEntity).getText();
-				int h = broadcastFont.getLineHeight();
-				int w = broadcastFont.getWidth(message);
-				broadcastFont.drawString((int)container.getWidth()-w-20, (int)h*i + h, message, color);
-				if (timerMapper.get(broadcastEntity) != null) {
-					if (timerMapper.get(broadcastEntity).isFinished()) {
-						broadcastEntity.delete();
-					}
-				}
-			}
 			
 			// Render input text
-			if (world.getTagManager().getEntity("INPUT") != null) {
+			Entity input = world.getTagManager().getEntity("INPUT");
+			if (visibilityMapper.get(input).isVisible()) {
+				int chatHistoryHeight = 200;
+				int inputHeight = 20;
+				
+				graphics.setColor(new Color(0,0,0,150));
+				graphics.fillRect(0, container.getHeight()-inputHeight, container.getWidth(), inputHeight);
 				graphics.setColor(new Color(0,0,0,100));
-				graphics.fillRect(0, container.getHeight()-20, container.getWidth(), 20);
+				graphics.fillRect(0, container.getHeight()-(inputHeight + chatHistoryHeight), container.getWidth(), chatHistoryHeight);
 				graphics.setColor(new Color(255,255,255));
-				String message = drawableTextMapper.get(world.getTagManager().getEntity("INPUT")).getText();
-				message = "Say: " + message;
-				graphics.drawString(message,5, container.getHeight()-inputFont.getLineHeight()-3);
+				String message = drawableTextMapper.get(input).getText();
+				inputFont.drawString(5,container.getHeight()-inputFont.getLineHeight()-3, message);
+				
+				// Render chat text
+				int chatTextHeight = chatFont.getLineHeight();
+				int startIndex = 0;
+				// Scroll if chat size is larger than the chat window
+				if (chats.size() * chatTextHeight > chatHistoryHeight) {
+					int diff = chats.size() * chatTextHeight - chatHistoryHeight;
+					startIndex = diff / chatTextHeight + 1;					
+				}
+				for (int i=startIndex; i<chats.size(); i++) {
+					Entity chat = chats.get(i);
+					message = drawableTextMapper.get(chat).getText();
+					Color color = colorMapper.get(chat).getColor();
+					color = new Color(color.r, color.g, color.b, .8f);
+					int chatTextWidth = chatFont.getWidth(message);
+					chatFont.drawString(5, container.getHeight() - (inputHeight + chatHistoryHeight) + chatTextHeight * (i-startIndex), message, color);
+				}
 			}
 		}
 		

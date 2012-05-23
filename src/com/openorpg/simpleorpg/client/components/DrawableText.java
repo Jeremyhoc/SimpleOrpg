@@ -9,6 +9,10 @@ public class DrawableText extends Component {
 	public DrawableText(String text) {
 		setText(text);
 	}
+	
+	public DrawableText() {
+		setText("");
+	}
 
 	public String getText() {
 		return text;

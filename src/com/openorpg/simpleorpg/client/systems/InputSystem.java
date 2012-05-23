@@ -1,16 +1,10 @@
 package com.openorpg.simpleorpg.client.systems;
-import java.awt.Font;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
 import com.artemis.ComponentMapper;
@@ -22,7 +16,9 @@ import com.openorpg.simpleorpg.client.components.Location;
 import com.openorpg.simpleorpg.client.components.Movement;
 import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.ResourceRef;
+import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
+import com.openorpg.simpleorpg.client.components.Visibility;
 import com.openorpg.simpleorpg.managers.ResourceManager;
 
 public class InputSystem extends BaseEntitySystem implements KeyListener {
@@ -31,17 +27,19 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 	private ComponentMapper<Timer> timerMapper;
 	private ComponentMapper<Networking> networkingMapper;
 	private ComponentMapper<Location> locationMapper;
-	private TrueTypeFont inputFont;
 	private Character c = null;
 	private ComponentMapper<Movement> movementMapper;
 	private ComponentMapper<ResourceRef> resourceRefMapper;
+	private ComponentMapper<Visibility> visibilityMapper;
 	
 	private boolean key_back = false,
 					key_enter = false,
+					key_tab = false,
 					key_up = false,
 					key_down = false,
 					key_left = false,
-					key_right = false;
+					key_right = false,
+					key_esc = false;
 
 	@SuppressWarnings("unchecked")
 	public InputSystem(GameContainer container) {
@@ -57,7 +55,7 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		locationMapper = new ComponentMapper<Location>(Location.class, world);
 		movementMapper = new ComponentMapper<Movement>(Movement.class, world);
 		resourceRefMapper = new ComponentMapper<ResourceRef>(ResourceRef.class, world);
-		inputFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.PLAIN, 12), false);
+		visibilityMapper = new ComponentMapper<Visibility>(Visibility.class, world);
 		container.getInput().addKeyListener(this);
 	}
 
@@ -69,52 +67,65 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
-		Entity inputEntity = null;
+		Entity input = world.getTagManager().getEntity("INPUT");
 		Entity yourEntity = world.getTagManager().getEntity("YOU");
 		Location yourLocation = locationMapper.get(yourEntity);
 		Networking net = networkingMapper.get(yourEntity);
 		ArrayBlockingQueue<String> sendMessages = net.getSendMessages();
 		
-		// Alphanumeric input interface (when you press a key chat shows up)
-		if (world.getTagManager().getEntity("INPUT") != null) {
-			inputEntity = world.getTagManager().getEntity("INPUT");
-		}
-		
-		if (this.c != null) {
-			if (inputEntity == null) {
-				inputEntity = world.createEntity();
-				inputEntity.setTag("INPUT");
-				inputEntity.addComponent(new DrawableText(c.toString()));
-				inputEntity.addComponent(new Timer(75));
-				inputEntity.refresh();
-			} else {
-				DrawableText drawableText = drawableTextMapper.get(inputEntity);
-				if (drawableText.getText().length() < 50)
-					drawableText.setText(drawableText.getText() + c);
+		// Alphanumeric input interface (when you press enter chat shows up)
+		if (key_enter) {
+			DrawableText drawableText = drawableTextMapper.get(input);
+			if (!drawableText.getText().equals("") && visibilityMapper.get(input).isVisible()) {
+				Entity chatEntity = world.createEntity();
+				chatEntity.setGroup("CHAT");
+				chatEntity.addComponent(new DrawableText("You: " + drawableText.getText()));
+				yourEntity.addComponent(new ChatBubble(drawableText.getText(), 15 * 1000));
+				chatEntity.addComponent(new ColorComponent(Color.white));
+				chatEntity.refresh();
+				sendMessages.add("CHAT:SAY," + drawableText.getText());
+				drawableText.setText("");
 			}
 		}
-		// You can't hold down a letter for input
-		c = null;
+		
+		// Add to the input text
+		if (c != null && visibilityMapper.get(input).isVisible()) {
+			DrawableText drawableText = drawableTextMapper.get(input);
+			if (drawableText.getText().length() < 150)
+				drawableText.setText(drawableText.getText() + c);
+		}
 		
 		// Backspace
-		if (key_back && inputEntity != null) {
-			Timer timer = timerMapper.get(inputEntity);
-			if (timer.isFinished()) {
-				timer.reset();
-				String txt = drawableTextMapper.get(inputEntity).getText();
-				drawableTextMapper.get(inputEntity).setText(txt.substring(0, txt.length()-1));
-				if (txt.length()-1 == 0) inputEntity.delete();
+		if (key_back && visibilityMapper.get(input).isVisible()) {
+			Timer timer = timerMapper.get(input);
+			
+			if (timer != null) {
+				if (timer.isFinished()) {
+					String txt = drawableTextMapper.get(input).getText();
+					if (timer.isFinished() && txt.length() > 0) {
+						timer.reset();
+						drawableTextMapper.get(input).setText(txt.substring(0, txt.length()-1));
+					}
+					input.removeComponent(timer);
+				}
+			} else {
+				input.addComponent(new Timer(75));
 			}
 		}
 		
-		// Enter
-		if (key_enter && inputEntity != null) {
-			DrawableText drawableText = drawableTextMapper.get(inputEntity);
-			
-			sendMessages.add("SAY:" + drawableText.getText());
-			inputEntity.delete();
+		// Hide the input & chat history
+		if (key_tab) {
+			visibilityMapper.get(input).setVisible(!visibilityMapper.get(input).isVisible());
 		}
 		
+		// You can't hold down a letter or enter for input
+		key_enter = false;
+		key_tab = false;
+		c = null;
+		
+		if (key_esc) {
+			container.exit();
+		}
 		
 		// Your movement
 		if (yourLocation != null) {
@@ -203,6 +214,9 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 			case Input.KEY_ENTER:
 				key_enter = true;
 				break;
+			case Input.KEY_TAB:
+				key_tab = true;
+				break;
 			case Input.KEY_CAPITAL:
 			case Input.KEY_INSERT:
 			case Input.KEY_LSHIFT:
@@ -211,6 +225,9 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 			case Input.KEY_RCONTROL:
 			case Input.KEY_LALT:
 			case Input.KEY_RALT:
+				break;
+			case Input.KEY_ESCAPE:
+				key_esc = true;
 				break;
 		}
 	}
@@ -234,8 +251,14 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 			case Input.KEY_BACK:
 				key_back = false;
 				break;
+			case Input.KEY_TAB:
+				key_tab = false;
+				break;
 			case Input.KEY_ENTER:
 				key_enter = false;
+				break;
+			case Input.KEY_ESCAPE:
+				key_esc = false;
 				break;
 		}
 		

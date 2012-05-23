@@ -24,8 +24,12 @@ public class JoinGameHandler extends MessageHandler {
 			synchronized(this) {
 				// Add the player to the game
 				players.put(socket, yourPlayer);
-				String joinGameMessage = "BROADCAST:#FFCC11," + yourPlayer.getName() + " has joined the game!";
+				String joinGameMessage = "CHAT:BROADCAST,#FFCC11," + yourPlayer.getName() + " has joined the game!";
+				String welcomeMessage = "CHAT:BROADCAST,#00FF00,Welcome to SimpleOrpg!";
+				
+				sendTo(socket,welcomeMessage);
 				sendAll(joinGameMessage);
+				
 			}
 			MessageHandler joinMapHandler = new JoinMapHandler();
 			joinMapHandler.handleMessage(socket);

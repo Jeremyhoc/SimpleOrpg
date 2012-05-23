@@ -1,9 +1,9 @@
 package com.openorpg.simpleorpg.client.components;
 
-public class Say extends Timer {
+public class ChatBubble extends Timer {
 	private String text;
 
-	public Say(String text, int waitTime) {
+	public ChatBubble(String text, int waitTime) {
 		super(waitTime);
 		setText(text);
 	}

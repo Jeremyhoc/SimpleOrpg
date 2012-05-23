@@ -14,7 +14,10 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.SystemManager;
 import com.artemis.World;
+import com.openorpg.simpleorpg.client.components.DrawableText;
 import com.openorpg.simpleorpg.client.components.Networking;
+import com.openorpg.simpleorpg.client.components.Timer;
+import com.openorpg.simpleorpg.client.components.Visibility;
 import com.openorpg.simpleorpg.client.systems.InputSystem;
 import com.openorpg.simpleorpg.client.systems.NetworkingSystem;
 import com.openorpg.simpleorpg.client.systems.RenderSystem;
@@ -55,6 +58,7 @@ public class Client extends BasicGame {
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		container.setVSync(true);
+		container.setAlwaysRender(true);
 		world = new World();
 		systemManager = world.getSystemManager();
 		warpSystem = systemManager.setSystem(new WarpSystem());
@@ -71,6 +75,12 @@ public class Client extends BasicGame {
 		int port = Integer.valueOf(props.getProperty("port", "1234"));
 		player.addComponent(new Networking(ip, port));
 		player.refresh();
+		
+		
+		Entity input = world.createEntity();
+		input.setTag("INPUT");
+		input.addComponent(new DrawableText());
+		input.addComponent(new Visibility(true));
 		
 	}
 	
