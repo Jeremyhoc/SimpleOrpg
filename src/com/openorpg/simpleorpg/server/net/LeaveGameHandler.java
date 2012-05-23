@@ -11,8 +11,8 @@ public class LeaveGameHandler extends MessageHandler {
 		try {
 			synchronized(this) {
 				Player yourPlayer = players.get(socket);
-				String leaveMessage = "BROADCAST:#FF0000," + yourPlayer.getName() + " has left the game!";
-				sendAllMapBut(socket, leaveMessage);
+				String leaveMessage = "CHAT:BROADCAST,#FF0000," + yourPlayer.getName() + " has left the game!";
+				sendAll(leaveMessage);
 				MessageHandler leaveMapHandler = new LeaveMapHandler();
 				leaveMapHandler.handleMessage(socket);
 				// Remove you from the game
