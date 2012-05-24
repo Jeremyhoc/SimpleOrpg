@@ -77,13 +77,23 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		if (key_enter) {
 			DrawableText drawableText = drawableTextMapper.get(input);
 			if (!drawableText.getText().equals("") && visibilityMapper.get(input).isVisible()) {
-				Entity chatEntity = world.createEntity();
-				chatEntity.setGroup("CHAT");
-				chatEntity.addComponent(new DrawableText("You: " + drawableText.getText()));
-				yourEntity.addComponent(new ChatBubble(drawableText.getText(), 15 * 1000));
-				chatEntity.addComponent(new ColorComponent(Color.white));
-				chatEntity.refresh();
-				sendMessages.add("CHAT:SAY," + drawableText.getText());
+				// Commands
+				if (drawableText.getText().startsWith("/")) {
+					String cmd = drawableText.getText().substring(1).toUpperCase();
+					if (cmd.equals("WHO")) {
+						logger.info("HERE");
+						sendMessages.add("WHO");
+					}
+				// Normal chat
+				} else {
+					Entity chatEntity = world.createEntity();
+					chatEntity.setGroup("CHAT");
+					chatEntity.addComponent(new DrawableText("You: " + drawableText.getText()));
+					yourEntity.addComponent(new ChatBubble(drawableText.getText(), 15 * 1000));
+					chatEntity.addComponent(new ColorComponent(Color.white));
+					chatEntity.refresh();
+					sendMessages.add("CHAT:SAY," + drawableText.getText());
+				}
 				drawableText.setText("");
 			}
 		}

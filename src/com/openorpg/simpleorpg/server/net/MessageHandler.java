@@ -40,6 +40,8 @@ public abstract class MessageHandler {
 			return new MoveHandler(payload);
 		} else if (id.equals("CHAT")) {
 			return new ChatHandler(payload);
+		} else if (id.equals("WHO")) {
+			return new WhoHandler();
 		} else {
 			
 		}

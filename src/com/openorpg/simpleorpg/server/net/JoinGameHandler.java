@@ -24,10 +24,12 @@ public class JoinGameHandler extends MessageHandler {
 			synchronized(this) {
 				// Add the player to the game
 				players.put(socket, yourPlayer);
-				String joinGameMessage = "CHAT:BROADCAST,#FFCC11," + yourPlayer.getName() + " has joined the game!";
-				String welcomeMessage = "CHAT:BROADCAST,#00FF00,Welcome to SimpleOrpg!";
 				
+				String joinGameMessage = "CHAT:BROADCAST,#00FF00," + yourPlayer.getName() + " has joined the game!";
+				String welcomeMessage = "CHAT:BROADCAST,#00FFFF,Welcome to SimpleOrpg!";
 				sendTo(socket,welcomeMessage);
+				WhoHandler whoHandler = new WhoHandler();
+				whoHandler.handleMessage(socket);
 				sendAll(joinGameMessage);
 				
 			}
