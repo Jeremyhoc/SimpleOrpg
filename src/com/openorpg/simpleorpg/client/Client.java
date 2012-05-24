@@ -15,6 +15,7 @@ import com.artemis.EntitySystem;
 import com.artemis.SystemManager;
 import com.artemis.World;
 import com.openorpg.simpleorpg.client.components.DrawableText;
+import com.openorpg.simpleorpg.client.components.Movement;
 import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
@@ -74,6 +75,7 @@ public class Client extends BasicGame {
 		String ip = props.getProperty("ip", "127.0.0.1");
 		int port = Integer.valueOf(props.getProperty("port", "1234"));
 		player.addComponent(new Networking(ip, port));
+		player.addComponent(new Movement(100));
 		player.refresh();
 		
 		

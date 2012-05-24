@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="19" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Odyssey" tilewidth="32" tileheight="32">
+  <image source="../graphics/tiles.png" trans="000000" width="224" height="288"/>
+ </tileset>
+ <tileset firstgid="64" name="Collision" tilewidth="32" tileheight="32">
+  <image source="../graphics/collision.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="66" name="Odyssey2" tilewidth="32" tileheight="32">
+  <image source="../graphics/tiles2.png" trans="000000" width="224" height="480"/>
+ </tileset>
+ <tileset firstgid="171" name="Odyssey3" tilewidth="32" tileheight="32">
+  <image source="../graphics/tiles3.png" trans="000000" width="224" height="352"/>
+ </tileset>
+ <layer name="Ground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC92VsQ0AIAgEWcUZZBf330Rr8tF/ghYW1xjCoSK6mfmiATrAQTxaQ7Bxu1qY2KxDrTmuDxGlZjW36sjmj44b+X93xL6ucvhjx8v76AWO0x6qHOzcyzqy867yXaAeY1zKDDw5GJSzUv4chgnc06eMbAcAAA==
+  </data>
+ </layer>
+ <layer name="Background" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7WUgQnDMAwEs1KygCftEFkkpZN0hbYQwyNer1dJHkRwFP/Jtpx18TXEeEu+H2KstP5R11hyxqMZ6MsYzHvqOINpT2pnHPRH/byf33gJTvScfhthRH/kOP7IiUx2FpWvyqsexPlqf6q8w6jqrPLsbtwh1k9dZeuYdzQy2L9A+TjnofrJ9XH6yuV07gVjIOtKMU+H8w7PLgPfX7Gmyiv2RIcZ57hz1d5m9eD4A/5PpApsBwAA
+  </data>
+ </layer>
+ <layer name="Foreground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC9WVUQqAIBBEPdZeVijofJ0hooRpmNW09aOFxdJ6rzWzlK6wO6PDoI10mDj2+Esnu1zPLBP9vWzl8Gr5wud72YHedYKDz//mUO8k0oFcrmlGHbMd6tsbdZz8TA52RTgweJ7Qkwc9yqHWL3pKom+nFvmZ+rw9UM2dcjGb+R7LGy9ZWFt61tliv/1f1OZWpRr3ams9S22/QN4B9XMge2wHAAA=
+  </data>
+ </layer>
+ <layer name="Collision" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3NwQ0AIAhDUUZj/6m8G8HSwg2SJl78z83Mdy1Dzq8320ZNtl+56T5j/NzsD2owt0beU42KjfTRlmooTsWIvMxn+5HV3X5ZE111B+/c9rZsBwAA
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="25" height="19">
+  <object name="WarpBack" type="Warp" x="374" y="537" width="50" height="47">
+   <properties>
+    <property name="Map" value="testmap1"/>
+    <property name="X" value="11"/>
+    <property name="Y" value="6"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

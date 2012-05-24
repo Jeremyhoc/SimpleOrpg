@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.managers;
+package com.openorpg.simpleorpg.shared;
 
 import java.util.HashMap;
 

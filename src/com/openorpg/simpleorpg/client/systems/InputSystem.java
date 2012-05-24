@@ -5,7 +5,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
-import org.newdawn.slick.tiled.TiledMap;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -19,7 +18,8 @@ import com.openorpg.simpleorpg.client.components.ResourceRef;
 import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
-import com.openorpg.simpleorpg.managers.ResourceManager;
+import com.openorpg.simpleorpg.shared.NewTiledMap;
+import com.openorpg.simpleorpg.shared.ResourceManager;
 
 public class InputSystem extends BaseEntitySystem implements KeyListener {
 	private GameContainer container;
@@ -70,6 +70,7 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		Entity input = world.getTagManager().getEntity("INPUT");
 		Entity yourEntity = world.getTagManager().getEntity("YOU");
 		Location yourLocation = locationMapper.get(yourEntity);
+		Movement yourMovement = movementMapper.get(yourEntity);
 		Networking net = networkingMapper.get(yourEntity);
 		ArrayBlockingQueue<String> sendMessages = net.getSendMessages();
 		
@@ -140,6 +141,7 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		// Your movement
 		if (yourLocation != null) {
 			int newX = (int)yourLocation.getPosition().x, newY = (int)yourLocation.getPosition().y;
+			int oldX = (int)yourLocation.getPosition().x, oldY = (int)yourLocation.getPosition().y;
 			String moveMessage = "";
 			
 			if (key_up) {
@@ -163,7 +165,7 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 				// Check for collision & move the player
 				if (maps.get(0) != null) {
 					String mapResName = resourceRefMapper.get(maps.get(0)).getResourceName();
-					TiledMap map = (TiledMap)manager.getResource(mapResName).getObject();
+					NewTiledMap map = (NewTiledMap)manager.getResource(mapResName).getObject();
 					// Bounds Check
 					if (newX <= map.getWidth() && newY <= map.getHeight() &&
 						newX >= -1 && newY >= -1) {
@@ -173,19 +175,17 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 							collisionId = map.getTileId(newX, newY, 3);
 						} catch (Exception ex) { collisionId = 0; }
 						if (collisionId == 0) {
-							Movement yourMovement;
-							if (movementMapper.get(yourEntity) != null) {
-								yourMovement = movementMapper.get(yourEntity);
-							} else {
-								yourMovement = new Movement(100);
-								yourEntity.addComponent(yourMovement);
-								yourEntity.refresh();
-							}
-							
+							yourMovement = movementMapper.get(yourEntity);
+
 							if (yourMovement.isFinished()) {
-								sendMessages.add(moveMessage);
-								yourLocation.getPosition().set(newX, newY);
-								yourMovement.reset();
+								// Prevent desyncing issues by 'freezing' the player at the warp/edge of map
+								if (oldX != -1 && oldY != -1 && oldX != map.getWidth() && oldY != map.getHeight()) {
+									if (map.getMapObjects()[oldX][oldY] == -1) {
+										sendMessages.add(moveMessage);
+										yourLocation.getPosition().set(newX, newY);
+										yourMovement.reset();
+									}
+								}
 							}
 						}
 					}

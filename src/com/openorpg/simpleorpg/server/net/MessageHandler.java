@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.openorpg.simpleorpg.server.Map;
 import com.openorpg.simpleorpg.server.Player;
+import com.openorpg.simpleorpg.shared.ResourceFactory;
 
 
 public abstract class MessageHandler {
@@ -19,10 +20,10 @@ public abstract class MessageHandler {
 	
 	// Load in maps from the database
 	public static void init() {
-		maps.put("testmap", new Map());
-		maps.put("testmap1", new Map());
-		maps.put("testmap2", new Map());
-		maps.put("testmap3", new Map());
+		for (String mapRef : ResourceFactory.getInstance().getResourceIds("tiledmap")) {
+			maps.put(mapRef, new Map());
+		}
+		
 	}
 	
 	public static MessageHandler create(String message) {

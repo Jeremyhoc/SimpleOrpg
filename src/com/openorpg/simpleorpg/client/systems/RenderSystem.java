@@ -22,7 +22,7 @@ import com.openorpg.simpleorpg.client.components.ResourceRef;
 import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
-import com.openorpg.simpleorpg.managers.ResourceManager;
+import com.openorpg.simpleorpg.shared.ResourceManager;
 
 public class RenderSystem extends BaseEntitySystem {
 	private ComponentMapper<ResourceRef> resourceRefMapper;
