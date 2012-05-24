@@ -13,6 +13,21 @@ public class MoveHandler extends MessageHandler {
 	public MoveHandler(String payload) {
 		this.payload = payload;
 	}
+	
+	private synchronized void warpPlayer(Socket socket, String mapRef, int x, int y) {
+		Player player = players.get(socket);
+		
+		// Leave the current map
+		MessageHandler leaveMapHandler = new LeaveMapHandler();
+		leaveMapHandler.handleMessage(socket);
+		
+		player.setLocation(x, y);
+		player.setMapRef(mapRef);
+		
+		// Join the new map
+		MessageHandler joinMapHandler = new JoinMapHandler();
+		joinMapHandler.handleMessage(socket);
+	}
 
 	@Override
 	public void handleMessage(Socket socket) {
@@ -33,69 +48,96 @@ public class MoveHandler extends MessageHandler {
 			ResourceManager manager = ResourceManager.getInstance();
 			TiledMap tiledMap = (TiledMap)manager.getResource(yourPlayer.getMapRef(), true).getObject();
 			
-			// Bounds check
-			if (newY < tiledMap.getHeight() && newX < tiledMap.getWidth() &&
-				newY >= 0 && newX >= 0) {
-				// Collision layer check
-				if (tiledMap.getTileId(newX, newY, 3) == 0) {
+			// TODO: This should be part of the TiledMap
 			
-					// Check to make sure the player isn't trying to move too fast
-					//Long curTime = new Date().getTime();
-					//if (curTime - yourPlayer.getLastMovedTime() > 25) {
-						//yourPlayer.setLastMovedTime(curTime);
-						yourPlayer.setLocation(newX, newY);
-						
-						// Send you all other players on the map
-						String playerMoved = "PLAYER_MOVED:" + yourPlayer.getId() + "," + 
-															   yourPlayer.getX() + "," + 
-															   yourPlayer.getY();
-						
-						sendAllMapBut(socket, playerMoved);
-					//} else {
-					//	logger.info(socket.getInetAddress().getHostAddress() + " is trying to move too fast!");
-					//}
+			int mapObjects[][] = new int[tiledMap.getWidth()][tiledMap.getHeight()];
+			
+			for (int x=0; x<tiledMap.getWidth(); x++) {
+				for (int y=0; y<tiledMap.getHeight(); y++) {
+					mapObjects[x][y] = -1;
 				}
-			// if you failed the bounds check we might warp you to the next map
-			} else {
-				// Right
-				String warpTo = "";
+			}
+			
+			int groupID = 0;
+			for (int objectID = 0; objectID < tiledMap.getObjectCount(groupID); objectID++) {
+				int objectX = tiledMap.getObjectX(groupID, objectID);
+				int objectY = tiledMap.getObjectY(groupID, objectID);
+				int objectWidth = tiledMap.getObjectWidth(groupID, objectID);
+				int objectHeight = tiledMap.getObjectHeight(groupID, objectID);
+	
+				for (int w=0; w<objectWidth; w+= 16) {
+					for (int h=0; h<objectHeight; h+= 16) {
+						int objectTileX = (objectX+w)/tiledMap.getTileWidth();
+						int objectTileY = (objectY+h)/tiledMap.getTileHeight();
+						mapObjects[objectTileX][objectTileY] = objectID;
+					}
+				}
+			}
+			
+			
+			// Bounds check
+			if (newY >= tiledMap.getHeight() || newX >= tiledMap.getWidth() || newY < 0 || newX < 0) {
+				// Warp Right
+				String warpMap = "";
 				if (newX >= tiledMap.getWidth()) {
-					warpTo = tiledMap.getMapProperty("Right", "");
+					warpMap = tiledMap.getMapProperty("Right", "");
 					newX = 0;
 				}
 				
-				// Left
-				if (newX <= -1) {
-					warpTo = tiledMap.getMapProperty("Left", "");
+				// Warp Left
+				if (newX < 0) {
+					warpMap = tiledMap.getMapProperty("Left", "");
 					newX = tiledMap.getWidth()-1;
 				}
 				
-				// Up
-				if (newY <= -1) {
-					warpTo = tiledMap.getMapProperty("Up", "");
+				// Warp Up
+				if (newY < 0) {
+					warpMap = tiledMap.getMapProperty("Up", "");
 					newY = tiledMap.getHeight()-1;
 				}
 				
-				// Down
+				// Warp Down
 				if (newY >= tiledMap.getHeight()) {
-					warpTo = tiledMap.getMapProperty("Down", "");
+					warpMap = tiledMap.getMapProperty("Down", "");
 					newY = 0;
 				}
 				
-				if (!warpTo.equals("")) {
-					// Leave the current map
-					MessageHandler leaveMapHandler = new LeaveMapHandler();
-					leaveMapHandler.handleMessage(socket);
-					
-					yourPlayer.setLocation(newX, newY);
-					yourPlayer.setMapRef(warpTo);
-					
-					// Join the new map
-					MessageHandler joinMapHandler = new JoinMapHandler();
-					joinMapHandler.handleMessage(socket);
+				if (!warpMap.equals("")) {
+					warpPlayer(socket, warpMap, newX, newY);
 				}
+				
+			} else if (mapObjects[newX][newY] != -1) {
+				int objectID = mapObjects[newX][newY];
+				String objectType = tiledMap.getObjectType(groupID, objectID).toUpperCase();
+				
+				if (objectType.equals("WARP")) {
+					String warpMap = tiledMap.getObjectProperty(groupID, objectID, "Map", yourPlayer.getMapRef());
+					int warpX = Integer.valueOf(tiledMap.getObjectProperty(groupID, objectID, "X", "0"));
+					int warpY = Integer.valueOf(tiledMap.getObjectProperty(groupID, objectID, "Y", "0"));
+					warpPlayer(socket, warpMap, warpX, warpY);
+
+				}
+				
+				
+			// Check for collision
+			} else if (tiledMap.getTileId(newX, newY, 3) == 0) {
+			
+				// Check to make sure the player isn't trying to move too fast
+				//Long curTime = new Date().getTime();
+				//if (curTime - yourPlayer.getLastMovedTime() > 25) {
+					//yourPlayer.setLastMovedTime(curTime);
+					yourPlayer.setLocation(newX, newY);
+					
+					// Send you all other players on the map
+					String playerMoved = "PLAYER_MOVED:" + yourPlayer.getId() + "," + 
+														   yourPlayer.getX() + "," + 
+														   yourPlayer.getY();
+					
+					sendAllMapBut(socket, playerMoved);
+				//} else {
+				//	logger.info(socket.getInetAddress().getHostAddress() + " is trying to move too fast!");
+				//}
 			}
 		}
 	}
-
 }

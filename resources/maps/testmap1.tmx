@@ -2,6 +2,7 @@
 <map version="1.0" orientation="orthogonal" width="25" height="19" tilewidth="32" tileheight="32">
  <properties>
   <property name="Left" value="testmap"/>
+  <property name="Mask" value="0,0,25,175"/>
  </properties>
  <tileset firstgid="1" name="Odyssey" tilewidth="32" tileheight="32">
   <image source="../graphics/tiles.png" trans="000000" width="224" height="288"/>
@@ -26,7 +27,16 @@
  </layer>
  <layer name="Collision" width="25" height="19">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+XNsREAMAhCUUZz/6nSW+QwCE3+HaW+AlDm9RIGU8KYOkoOo984jJvrNBgnYWxZKYe1Uo7qTQzFe3VYS/nPepvGbzuBNsTqbAcAAA==
+   H4sIAAAAAAAAC+XNwQ0AIAxCUUbr/lN574kKEqM/4corAHV4vYTBlDCmjtIrBus4usFwWSmHtVKO6k0Mxdt1WEv5Zz2n8dsWHf0Qf2wHAAA=
   </data>
  </layer>
+ <objectgroup name="Objects" width="25" height="19">
+  <object name="Tavern Warp" type="Warp" x="361" y="164" width="50" height="28">
+   <properties>
+    <property name="Map" value="tavern"/>
+    <property name="X" value="12"/>
+    <property name="Y" value="15"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
