@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.managers;
+package com.openorpg.simpleorpg.shared;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.openorpg.simpleorpg.managers.Resource.ResourceType;
+import com.openorpg.simpleorpg.shared.Resource.ResourceType;
 
 public class ResourceFactory {
 	private final Logger logger = Logger.getLogger(getClass());
@@ -62,9 +62,9 @@ public class ResourceFactory {
 			return new Resource(id, ResourceType.IMAGE, path, new Image(path));
 		} else if (type.equals("tiledmap")) {
 			if (headless) {
-				return new Resource(id, ResourceType.TILED_MAP, path, new TiledMap(path, false));
+				return new Resource(id, ResourceType.TILED_MAP, path, new NewTiledMap(path, false));
 			} else {
-				return new Resource(id, ResourceType.TILED_MAP, path, new TiledMap(path, true));
+				return new Resource(id, ResourceType.TILED_MAP, path, new NewTiledMap(path, true));
 			}
 		} else if (type.equals("spritesheet")) {
 			int width = Integer.valueOf(resourceElement.getAttribute("width"));

@@ -33,7 +33,7 @@
   </data>
  </layer>
  <objectgroup name="Objects" width="25" height="19">
-  <object name="WarpBack" type="Warp" x="380" y="546" width="36" height="38">
+  <object name="WarpBack" type="Warp" x="374" y="537" width="50" height="47">
    <properties>
     <property name="Map" value="testmap1"/>
     <property name="X" value="11"/>

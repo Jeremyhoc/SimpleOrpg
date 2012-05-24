@@ -4,8 +4,9 @@ import java.net.Socket;
 
 import org.newdawn.slick.tiled.TiledMap;
 
-import com.openorpg.simpleorpg.managers.ResourceManager;
 import com.openorpg.simpleorpg.server.Player;
+import com.openorpg.simpleorpg.shared.NewTiledMap;
+import com.openorpg.simpleorpg.shared.ResourceManager;
 
 public class MoveHandler extends MessageHandler {
 	
@@ -46,34 +47,9 @@ public class MoveHandler extends MessageHandler {
 			
 			// Check for collisions
 			ResourceManager manager = ResourceManager.getInstance();
-			TiledMap tiledMap = (TiledMap)manager.getResource(yourPlayer.getMapRef(), true).getObject();
-			
-			// TODO: This should be part of the TiledMap
-			
-			int mapObjects[][] = new int[tiledMap.getWidth()][tiledMap.getHeight()];
-			
-			for (int x=0; x<tiledMap.getWidth(); x++) {
-				for (int y=0; y<tiledMap.getHeight(); y++) {
-					mapObjects[x][y] = -1;
-				}
-			}
-			
+			NewTiledMap tiledMap = (NewTiledMap)manager.getResource(yourPlayer.getMapRef(), true).getObject();
 			int groupID = 0;
-			for (int objectID = 0; objectID < tiledMap.getObjectCount(groupID); objectID++) {
-				int objectX = tiledMap.getObjectX(groupID, objectID);
-				int objectY = tiledMap.getObjectY(groupID, objectID);
-				int objectWidth = tiledMap.getObjectWidth(groupID, objectID);
-				int objectHeight = tiledMap.getObjectHeight(groupID, objectID);
-	
-				for (int w=0; w<objectWidth; w+= 16) {
-					for (int h=0; h<objectHeight; h+= 16) {
-						int objectTileX = (objectX+w)/tiledMap.getTileWidth();
-						int objectTileY = (objectY+h)/tiledMap.getTileHeight();
-						mapObjects[objectTileX][objectTileY] = objectID;
-					}
-				}
-			}
-			
+			int mapObjects[][] = tiledMap.getMapObjects();
 			
 			// Bounds check
 			if (newY >= tiledMap.getHeight() || newX >= tiledMap.getWidth() || newY < 0 || newX < 0) {

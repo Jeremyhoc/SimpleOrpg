@@ -6,9 +6,9 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.openorpg.simpleorpg.managers.ResourceFactory;
 import com.openorpg.simpleorpg.server.Map;
 import com.openorpg.simpleorpg.server.Player;
+import com.openorpg.simpleorpg.shared.ResourceFactory;
 
 
 public abstract class MessageHandler {
