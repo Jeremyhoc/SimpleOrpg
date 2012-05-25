@@ -20,10 +20,9 @@ import com.openorpg.simpleorpg.client.components.Location;
 import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.ResourceRef;
 import com.openorpg.simpleorpg.client.components.ChatBubble;
-import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
 import com.openorpg.simpleorpg.shared.ResourceManager;
-
+@SuppressWarnings("deprecation")
 public class RenderSystem extends BaseEntitySystem {
 	private ComponentMapper<ResourceRef> resourceRefMapper;
 	private ComponentMapper<Location> locationMapper;
@@ -33,7 +32,7 @@ public class RenderSystem extends BaseEntitySystem {
 	private ComponentMapper<DrawableText> drawableTextMapper;
 	private ComponentMapper<ChatBubble> chatBubbleMapper;
 	private ComponentMapper<Fade> fadeMapper;
-	private TrueTypeFont broadcastFont;
+	
 	private TrueTypeFont nameFont;
 	private TrueTypeFont inputFont;
 	private TrueTypeFont saysFont;
@@ -56,7 +55,6 @@ public class RenderSystem extends BaseEntitySystem {
 		chatBubbleMapper = new ComponentMapper<ChatBubble>(ChatBubble.class, world);
 		fadeMapper = new ComponentMapper<Fade>(Fade.class, world);
 		visibilityMapper = new ComponentMapper<Visibility>(Visibility.class, world);
-		broadcastFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 14), false);
 		saysFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 12), false);
 		nameFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.PLAIN, 12), false);
 		inputFont = new TrueTypeFont(new java.awt.Font("Verdana", Font.BOLD, 12), false);
@@ -74,7 +72,6 @@ public class RenderSystem extends BaseEntitySystem {
 		Graphics graphics = container.getGraphics();
 		ImmutableBag<Entity> maps = world.getGroupManager().getEntities("MAP");
 		ImmutableBag<Entity> players = world.getGroupManager().getEntities("PLAYER");
-		ImmutableBag<Entity> broadcasts = world.getGroupManager().getEntities("BROADCAST");
 		ImmutableBag<Entity> chats = world.getGroupManager().getEntities("CHAT");
 		ResourceManager manager = ResourceManager.getInstance();
 		int tw = 32, th = 32;
@@ -265,7 +262,6 @@ public class RenderSystem extends BaseEntitySystem {
 					message = drawableTextMapper.get(chat).getText();
 					Color color = colorMapper.get(chat).getColor();
 					color = new Color(color.r, color.g, color.b, .8f);
-					int chatTextWidth = chatFont.getWidth(message);
 					chatFont.drawString(5, container.getHeight() - (inputHeight + chatHistoryHeight) + chatTextHeight * (i-startIndex), message, color);
 				}
 			}

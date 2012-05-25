@@ -8,7 +8,6 @@ import com.artemis.EntityProcessingSystem;
 public abstract class BaseEntityProcessingSystem extends EntityProcessingSystem {
 	protected final Logger logger = Logger.getLogger(getClass());
 	
-	@SuppressWarnings("unchecked")
 	public BaseEntityProcessingSystem(Class<? extends Component> requiredType, Class<? extends Component>... otherTypes) {
 		super(requiredType, otherTypes);
 	}

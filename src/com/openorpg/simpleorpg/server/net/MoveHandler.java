@@ -2,8 +2,6 @@ package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
 
-import org.newdawn.slick.tiled.TiledMap;
-
 import com.openorpg.simpleorpg.server.Player;
 import com.openorpg.simpleorpg.shared.NewTiledMap;
 import com.openorpg.simpleorpg.shared.ResourceManager;

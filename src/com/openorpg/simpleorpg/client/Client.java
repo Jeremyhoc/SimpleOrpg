@@ -17,7 +17,6 @@ import com.artemis.World;
 import com.openorpg.simpleorpg.client.components.DrawableText;
 import com.openorpg.simpleorpg.client.components.Movement;
 import com.openorpg.simpleorpg.client.components.Networking;
-import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
 import com.openorpg.simpleorpg.client.systems.InputSystem;
 import com.openorpg.simpleorpg.client.systems.NetworkingSystem;
