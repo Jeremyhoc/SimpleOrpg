@@ -43,8 +43,8 @@ public abstract class MessageHandler {
 			return new ChatHandler(payload);
 		} else if (id.equals("WHO")) {
 			return new WhoHandler();
-		} else {
-			
+		} else if (id.equals("SET_NAME")) {
+			return new SetNameHandler(payload);
 		}
 		
 //		if (id.equals("JOIN_GAME")) {

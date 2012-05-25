@@ -77,23 +77,36 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		// Alphanumeric input interface (when you press enter chat shows up)
 		if (key_enter) {
 			DrawableText drawableText = drawableTextMapper.get(input);
-			if (!drawableText.getText().equals("") && visibilityMapper.get(input).isVisible()) {
+			String sendText = drawableText.getText();
+			
+			if (!sendText.equals("") && visibilityMapper.get(input).isVisible()) {
 				// Commands
-				if (drawableText.getText().startsWith("/")) {
-					String cmd = drawableText.getText().substring(1).toUpperCase();
+				if (sendText.startsWith("/")) {
+					String cmd = sendText.substring(1).toUpperCase().split(" ")[0];
+					
+					// who
 					if (cmd.equals("WHO")) {
-						logger.info("HERE");
 						sendMessages.add("WHO");
+					// setname <name>
+					} else if (cmd.equals("SETNAME") && sendText.contains(" ")) {
+						String name = sendText.substring(sendText.indexOf("SETNAME") + "SETNAME".length() + 2).trim();
+						
+						if (name.length() > 0 && name.length() <= 20) {
+							if (isAlpha(name)) {
+								sendMessages.add("SET_NAME:" + name);
+								drawableTextMapper.get(yourEntity).setText(name);
+							}
+						}
 					}
 				// Normal chat
 				} else {
 					Entity chatEntity = world.createEntity();
 					chatEntity.setGroup("CHAT");
-					chatEntity.addComponent(new DrawableText("You: " + drawableText.getText()));
-					yourEntity.addComponent(new ChatBubble(drawableText.getText(), 15 * 1000));
+					chatEntity.addComponent(new DrawableText("You: " + sendText));
+					yourEntity.addComponent(new ChatBubble(sendText, 15 * 1000));
 					chatEntity.addComponent(new ColorComponent(Color.white));
 					chatEntity.refresh();
-					sendMessages.add("CHAT:SAY," + drawableText.getText());
+					sendMessages.add("CHAT:SAY," + sendText);
 				}
 				drawableText.setText("");
 			}
@@ -195,15 +208,28 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 
 		
 	}
+	
+	boolean isAlpha(String st) {
+		for (char c : st.toCharArray()) {
+			if (!isAlpha(c)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	boolean isAlpha(char c) {
+		// If alphanumeric
+		if (c > 31 && c < 127) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public void keyPressed(int key, char c) {
-		
-		// If alphanumeric
-		if (c > 31 && c < 127) {
-			this.c = c;
-		}
-		
+		if (isAlpha(c)) this.c = c;
 		switch (key) {
 			case Input.KEY_LEFT:
 				key_left = true;
