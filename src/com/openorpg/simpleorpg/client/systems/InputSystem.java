@@ -89,7 +89,7 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 						sendMessages.add("WHO");
 					// setname <name>
 					} else if (cmd.equals("SETNAME") && sendText.contains(" ")) {
-						String name = sendText.substring(sendText.indexOf("SETNAME") + "SETNAME".length() + 2).trim();
+						String name = sendText.substring(sendText.indexOf("SETNAME") + "SETNAME".length() + 2).replace(",", "").trim();
 						
 						if (name.length() > 0 && name.length() <= 20) {
 							if (isAlpha(name)) {

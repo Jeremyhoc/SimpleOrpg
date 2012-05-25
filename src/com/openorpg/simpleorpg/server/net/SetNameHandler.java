@@ -16,7 +16,7 @@ public class SetNameHandler extends MessageHandler {
 		synchronized(this) {
 			Player yourPlayer = players.get(socket);
 			
-			payload = payload.trim();
+			payload = payload.replace(",", "").trim();
 			if (isAlpha(payload) && payload.length() > 0 && payload.length() <= 20) {
 				yourPlayer.setName(payload);
 				sendAllMapBut(socket, "SET_NAME:" + yourPlayer.getId() + "," + payload);
