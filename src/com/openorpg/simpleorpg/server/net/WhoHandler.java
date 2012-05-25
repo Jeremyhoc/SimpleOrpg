@@ -25,9 +25,9 @@ public class WhoHandler extends MessageHandler {
 				}
 			}
 			
-			if (numPlayers == 1) whoMessage += "There is one other player playing: " + playerNames;
-			else if (numPlayers == 0) whoMessage += "There are no other players playing.";
-			else whoMessage += "There are " + numPlayers + " other players playing: " + playerNames;
+			if (numPlayers == 1) whoMessage += "There is one other player online: " + playerNames;
+			else if (numPlayers == 0) whoMessage += "There are no other players online.";
+			else whoMessage += "There are " + numPlayers + " other players online: " + playerNames;
 			
 			sendTo(socket, whoMessage);
 		}
