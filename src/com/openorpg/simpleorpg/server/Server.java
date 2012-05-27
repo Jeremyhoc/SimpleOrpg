@@ -47,7 +47,6 @@ public class Server {
 										
 										String receivedLine;
 										while ((receivedLine = in.readLine()) != null) {
-											logger.info(receivedLine);
 											MessageHandler handler = MessageHandler.create(receivedLine);
 											if (handler != null) {
 												handler.handleMessage(clientSocket);
@@ -59,9 +58,7 @@ public class Server {
 										logger.error(ex);
 									}
 									MessageHandler leaveHandler = new LeaveGameHandler();
-									leaveHandler.handleMessage(clientSocket);
-									logger.info("Closed " + clientSocket.getInetAddress().getHostAddress());
-									
+									leaveHandler.handleMessage(clientSocket);									
 								}
 							}.start();
 						} catch (Exception ex) {

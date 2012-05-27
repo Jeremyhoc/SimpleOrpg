@@ -2,6 +2,8 @@ package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
 
+import org.apache.log4j.Level;
+
 import com.openorpg.simpleorpg.server.Player;
 import com.openorpg.simpleorpg.shared.NewTiledMap;
 import com.openorpg.simpleorpg.shared.ResourceManager;
@@ -31,6 +33,7 @@ public class MoveHandler extends MessageHandler {
 	@Override
 	public void handleMessage(Socket socket) {
 		synchronized(this) {
+			log(Level.DEBUG, MSG_TYPE.REC, socket, "MOVE:"+payload);
 			Player yourPlayer = players.get(socket);
 			int newX = yourPlayer.getX(), newY = yourPlayer.getY();
 			if (payload.equals("UP")) {

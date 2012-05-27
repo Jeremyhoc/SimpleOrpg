@@ -1,7 +1,7 @@
 package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
-
+import org.apache.log4j.Level;
 import com.openorpg.simpleorpg.server.Player;
 
 public class ChatHandler extends MessageHandler {
@@ -14,6 +14,7 @@ public class ChatHandler extends MessageHandler {
 	@Override
 	public void handleMessage(Socket socket) {
 		synchronized(this) {
+			log(Level.DEBUG, MSG_TYPE.REC, socket, "CHAT:"+payload);
 			Player yourPlayer = players.get(socket);
 			if (payload.contains(",")) {
 				String type = payload.split(",")[0].toUpperCase();
@@ -27,16 +28,16 @@ public class ChatHandler extends MessageHandler {
 					
 					if (type.equals("BROADCAST")) {
 						String broadcastMessage = "CHAT:BROADCAST," + 
-														"#FF0000," +
+														"#FF00FF," +
 														message;
-						logger.info(broadcastMessage);
+						//log(Level.INFO, true, socket, broadcastMessage);
 						sendAll(broadcastMessage);
 					} else if (type.equals("SAY")) {
 						String sayMessage = "CHAT:" + "SAY," + 
 													  "#FFFFFF," + 
 													  yourPlayer.getId() + "," +
 													  message;
-						logger.info(sayMessage);
+						//log(Level.INFO, true, socket, sayMessage);
 						sendAllMapBut(socket, sayMessage);
 					}
 				}

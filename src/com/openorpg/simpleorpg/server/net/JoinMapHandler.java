@@ -2,6 +2,8 @@ package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
 
+import org.apache.log4j.Level;
+
 import com.openorpg.simpleorpg.server.Map;
 import com.openorpg.simpleorpg.server.Player;
 
@@ -14,6 +16,7 @@ public class JoinMapHandler extends MessageHandler {
 	public void handleMessage(Socket socket) {
 		try {
 			synchronized(this) {
+				log(Level.DEBUG, MSG_TYPE.REC, socket, "JOIN_MAP");
 				Player yourPlayer = players.get(socket);
 				Map map = maps.get(yourPlayer.getMapRef());
 				

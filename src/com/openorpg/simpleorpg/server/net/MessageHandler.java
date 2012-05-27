@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.openorpg.simpleorpg.server.Map;
@@ -17,6 +18,9 @@ public abstract class MessageHandler {
 	protected final Logger logger = Logger.getLogger(getClass());
 	protected static final HashMap<String, Map> maps = new HashMap<String, Map>();
 	protected static final HashMap<Socket, Player> players = new HashMap<Socket, Player>();
+	protected enum MSG_TYPE {
+		SND, REC
+	}
 	
 	// Load in maps from the database
 	public static void init() {
@@ -26,7 +30,7 @@ public abstract class MessageHandler {
 		
 	}
 	
-	public static MessageHandler create(String message) {
+	public static MessageHandler create(String message) {		
 		String id = message;
 		if (message.contains(":")) {
 			id = message.split(":")[0].toUpperCase();
@@ -54,7 +58,7 @@ public abstract class MessageHandler {
 //		} else if (id.equals("JOIN_MAP")) {
 //			return new JoinMapHandler();
 //		} else {
-			messageLogger.warn(id);
+			messageLogger.warn(id + " does not exist");
 			return null;
 //		}
 	}
@@ -65,22 +69,14 @@ public abstract class MessageHandler {
 		
 		for (Socket otherSocket : map.getPlayers().keySet()) {
 			if (players.get(otherSocket).getId() != yourPlayer.getId()) {
-				try {
-					sendTo(otherSocket, message);
-				} catch (Exception ex) {
-					logger.error(ex);
-				}
+				sendTo(otherSocket, message);
 			}
 		}
 	}
 	
 	protected synchronized void sendAll(String message) {
-		for (Socket playerSocket : players.keySet()) {
-			try {
-				sendTo(playerSocket, message);
-			} catch (Exception ex) {
-				logger.error(ex);
-			}
+		for (Socket socket : players.keySet()) {
+			sendTo(socket, message);
 		}
 	}
 	
@@ -89,11 +85,53 @@ public abstract class MessageHandler {
 			try {
 				PrintWriter playerOut = new PrintWriter(socket.getOutputStream(), true);
 				playerOut.println(message);
+				log(Level.DEBUG, MSG_TYPE.SND, socket, message);
 			} catch (Exception ex) {
-				logger.error(ex);
+				log(Level.ERROR, socket, message, ex.getCause());
 			}
 		}
 	}
+	
+	protected String getIp(Socket socket) {
+		return socket.getInetAddress().getHostAddress();
+	}
+	
+	protected synchronized void log(Level level, MSG_TYPE type, Socket socket, String msg) {
+		String name = "";
+				
+		if (socket != null &&  !socket.isClosed()) {
+			name = socket.getInetAddress().getHostAddress();
+			Player yourPlayer = players.get(socket);
+			if (yourPlayer != null) {
+				name = yourPlayer.getName();
+			}
+		}
+		
+		if (!name.equals("")) {
+			logger.log(level, type + " [" + name +"] " + msg);
+		} else {
+			logger.log(level, type + " " + msg);
+		}
+	}
+	
+	protected synchronized void log(Level level, Socket socket, String msg, Throwable throwable) {
+		String name = "";
+		
+		if (socket != null &&  !socket.isClosed()) {
+			name = socket.getInetAddress().getHostAddress();
+			Player yourPlayer = players.get(socket);
+			if (yourPlayer != null) {
+				name = yourPlayer.getName();
+			}
+		}
+		
+		if (!name.equals("")) {
+			logger.log(level, "[" + name +"] " + msg, throwable);
+		} else {
+			logger.log(level, msg, throwable);
+		}
+	}
+	
 	
 	
 	public abstract void handleMessage(Socket socket);

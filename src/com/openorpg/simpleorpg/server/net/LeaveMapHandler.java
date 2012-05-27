@@ -2,6 +2,8 @@ package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
 
+import org.apache.log4j.Level;
+
 import com.openorpg.simpleorpg.server.Map;
 import com.openorpg.simpleorpg.server.Player;
 
@@ -11,6 +13,7 @@ public class LeaveMapHandler extends MessageHandler {
 	public void handleMessage(Socket socket) {
 		try {			
 			synchronized(this) {
+				log(Level.DEBUG, MSG_TYPE.REC, socket, "LEAVE_MAP");
 				Player yourPlayer = players.get(socket);
 				
 				//PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -31,8 +34,7 @@ public class LeaveMapHandler extends MessageHandler {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error(ex);
+			log(Level.ERROR, socket, ex.getMessage(), ex.getCause());
 		}
 	}
 

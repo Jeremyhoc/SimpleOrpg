@@ -2,6 +2,8 @@ package com.openorpg.simpleorpg.server.net;
 
 import java.net.Socket;
 
+import org.apache.log4j.Level;
+
 import com.openorpg.simpleorpg.server.Player;
 
 public class WhoHandler extends MessageHandler {
@@ -11,7 +13,8 @@ public class WhoHandler extends MessageHandler {
 
 	@Override
 	public void handleMessage(Socket socket) {
-		synchronized(this) {			
+		synchronized(this) {
+			log(Level.DEBUG, MSG_TYPE.REC, socket, "WHO");
 			String whoMessage = "CHAT:BROADCAST,#FFCC11,";
 			String playerNames = "";
 			Player yourPlayer = players.get(socket);
