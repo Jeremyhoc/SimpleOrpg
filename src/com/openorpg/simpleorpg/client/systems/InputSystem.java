@@ -83,19 +83,27 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 				// Commands
 				if (sendText.startsWith("/")) {
 					String cmd = sendText.substring(1).toUpperCase().split(" ")[0];
+					String cmdMsg = sendText.substring(sendText.indexOf(cmd) + cmd.length() + 2).replace(",", "").trim();
 					
 					// who
 					if (cmd.equals("WHO")) {
 						sendMessages.add("WHO");
 					// setname <name>
-					} else if (cmd.equals("SETNAME") && sendText.contains(" ")) {
-						String name = sendText.substring(sendText.indexOf("SETNAME") + "SETNAME".length() + 2).replace(",", "").trim();
+					} else if (cmd.equals("SETNAME")) {
+						String name = cmdMsg;
 						
 						if (name.length() > 0 && name.length() <= 20) {
 							if (isAlpha(name)) {
 								sendMessages.add("SET_NAME:" + name);
 								drawableTextMapper.get(yourEntity).setText(name);
 							}
+						}
+					// broadcast <msg>
+					} else if (cmd.equals("BROADCAST")) {
+						String broadcast = cmdMsg;
+						
+						if (broadcast.length() > 0) {
+							sendMessages.add("CHAT:BROADCAST," + broadcast);
 						}
 					}
 				// Normal chat
