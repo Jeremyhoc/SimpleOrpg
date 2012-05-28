@@ -105,6 +105,9 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 						if (broadcast.length() > 0) {
 							sendMessages.add("CHAT:BROADCAST," + broadcast);
 						}
+					} else if (cmd.equals("SEND")) {
+						String msg =  sendText.substring(sendText.indexOf(cmd) + cmd.length() + 2).trim();
+						sendMessages.add(msg);
 					}
 				// Normal chat
 				} else {
