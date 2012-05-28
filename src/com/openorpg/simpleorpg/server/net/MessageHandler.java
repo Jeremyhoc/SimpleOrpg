@@ -58,7 +58,7 @@ public abstract class MessageHandler {
 //		} else if (id.equals("JOIN_MAP")) {
 //			return new JoinMapHandler();
 //		} else {
-			messageLogger.warn(id + " does not exist");
+			messageLogger.warn(id + " ID does not exist");
 			return null;
 //		}
 	}
