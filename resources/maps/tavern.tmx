@@ -29,11 +29,11 @@
  </layer>
  <layer name="Collision" width="25" height="19">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3NwQ0AIAhDUUZj/6m8G8HSwg2SJl78z83Mdy1Dzq8320ZNtl+56T5j/NzsD2owt0beU42KjfTRlmooTsWIvMxn+5HV3X5ZE111B+/c9rZsBwAA
+   H4sIAAAAAAAAC+3NsQ0AIAhEUUbD/ZeysjGCBwcdJCRS+J+KiM6WLDJ6vbNt1Mz2I9Pdzxg/1/uDGpkZw++xRsRG+miLNRgnYljeuVdh37Kq2y+ro8vuBtowYNxsBwAA
   </data>
  </layer>
  <objectgroup name="Objects" width="25" height="19">
-  <object name="WarpBack" type="Warp" x="374" y="537" width="50" height="47">
+  <object name="WarpBack" type="Warp" x="382" y="544" width="33" height="31">
    <properties>
     <property name="Map" value="testmap1"/>
     <property name="X" value="11"/>
