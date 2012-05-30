@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.shared;
+package com.openorpg.simpleorpg.common;
 
 import java.io.FileInputStream;
 import java.io.IOException;

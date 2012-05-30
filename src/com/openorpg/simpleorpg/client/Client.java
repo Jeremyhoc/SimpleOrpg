@@ -22,7 +22,7 @@ import com.openorpg.simpleorpg.client.systems.InputSystem;
 import com.openorpg.simpleorpg.client.systems.NetworkingSystem;
 import com.openorpg.simpleorpg.client.systems.RenderSystem;
 import com.openorpg.simpleorpg.client.systems.WarpSystem;
-import com.openorpg.simpleorpg.shared.PropertiesLoader;
+import com.openorpg.simpleorpg.common.PropertiesLoader;
 
 
 public class Client extends BasicGame {

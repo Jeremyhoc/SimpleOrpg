@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="19" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="Left" value="Westshire3"/>
+  <property name="Up" value="Westshire2"/>
+ </properties>
+ <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
+  <image source="../graphics/collision.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="3" name="Architecture" tilewidth="32" tileheight="32">
+  <image source="../graphics/Architecture.png" trans="000000" width="224" height="1280"/>
+ </tileset>
+ <tileset firstgid="283" name="GroundTiles" tilewidth="32" tileheight="32">
+  <image source="../graphics/GroundTiles.png" trans="000000" width="224" height="768"/>
+ </tileset>
+ <tileset firstgid="451" name="Houses Castle and Pathways" tilewidth="32" tileheight="32">
+  <image source="../graphics/Houses Castle and Pathways.png" trans="000000" width="224" height="1536"/>
+ </tileset>
+ <tileset firstgid="787" name="Nature" tilewidth="32" tileheight="32">
+  <image source="../graphics/Nature.png" trans="000000" width="224" height="2432"/>
+ </tileset>
+ <tileset firstgid="1319" name="Objects and Others" tilewidth="32" tileheight="32">
+  <image source="../graphics/Objects and Others.png" trans="000000" width="224" height="1376"/>
+ </tileset>
+ <layer name="Ground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC6VUQQ7AIAgzcQf9/3/NtoOJa9qC7sBBrBQqMGop47F+fW36RtXWAI9xGO41PGc4GuAwX2UNDGNPXxcYx6lyY3wT62pFzVk9Tielv+Nw9UW5rm/Q53REnMOyuvBvVz7WexGH4kR+pu8am3Gw3sB3J//t9I9ycv5sPyEH43Pz5rSO9HI1/bnDXZDpD8ezs0vUTGRn381J1Fcnu8Xt/Z394d6vc37yFyo+O2d2RFRTpPcNYUCW1WwHAAA=
+  </data>
+ </layer>
+ <layer name="Background" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC41Uy07DMBBMQnLNMf1S+Co+IVF5SKRFCv0PuIIEyAfWqkeZTtamI638WHvfu2NbVaNQBO9L0H9Dt5WnMj0e0Hfn9bnZ6sH9d11VP0a/9SpjFlm8h0zFk6Mj0mL3R6O3RI/Nyo+yGjvfGE2Z+OzT/0iH9De0Z5odW9kW3L/Y+ZR0TOSjZzvvQyHG8EvPR/IRdsY3LHeRdxyvXNx33eVe9akOzx/81Tx7tan3kIN16LY8BviQw++1hoPE8ODI8+JbsjeIf7kaAT6N/yX+5mpd8W6981GvZ/gaZbDft7a/M7onPoNrHXLwf0n9A/5DWk9OLICYa+joRedwhW9eXj1b1S7OX24meTqmTM0xdjQzkFfua69/eB5wve3/iZ/2yET9zPIiXklHIB2lOpoy9clzAzMuojR7NZ/81+vBazBm4sT+z+1lDhRss86AUq7B72mOQEe8+wORXnlwbAcAAA==
+  </data>
+ </layer>
+ <layer name="Foreground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC91Vuw7CMAxMpPz/39Rz/wXWIgEjDDWVLE6WSc4RLJzkpbHv4kfcpZUDS4uNAfpdayk3tXt9c6yOi+X1Gr04O3uo7lNNJjTW4K6RhuGlIZAjg1GNmdqwPp4/U/esL/Y5is3ME6MV5fUtjYjL5zfS2fT8MnmXk87vuc7F/jsy/RVyHmxnWF/xXffez8yexBkSmFvkizQYyGA+TZ/dVZ9is3kjR+871kdabocz/wffy19qRDXaAfrsfqtsBwAA
+  </data>
+ </layer>
+ <layer name="Collision" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+1VMQ4AIQiD/3/a3HDRGKBQGG3iYkqLIqgiosFCsLiRHuPxa2b0LX4WKB+9eB0PL/beZ+8qikNn7NY+iyoX3QVbk8jr3Jv0sLTY3pjwfthg3mWWV51bE71/xnvzgD1H5GvFMrlXgOZqRz/zP3g+Hxa4ywo4bAcAAA==
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="25" height="19"/>
+</map>

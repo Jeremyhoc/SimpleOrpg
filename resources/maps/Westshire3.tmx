@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="19" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="Mask" value="255,205,0,30"/>
+  <property name="Right" value="Westshire4"/>
+  <property name="Up" value="Westshire"/>
+ </properties>
+ <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
+  <image source="../graphics/collision.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="3" name="Architecture" tilewidth="32" tileheight="32">
+  <image source="../graphics/Architecture.png" trans="000000" width="224" height="1280"/>
+ </tileset>
+ <tileset firstgid="283" name="GroundTiles" tilewidth="32" tileheight="32">
+  <image source="../graphics/GroundTiles.png" trans="000000" width="224" height="768"/>
+ </tileset>
+ <tileset firstgid="451" name="Houses Castle and Pathways" tilewidth="32" tileheight="32">
+  <image source="../graphics/Houses Castle and Pathways.png" trans="000000" width="224" height="1536"/>
+ </tileset>
+ <tileset firstgid="787" name="Nature" tilewidth="32" tileheight="32">
+  <image source="../graphics/Nature.png" trans="000000" width="224" height="2432"/>
+ </tileset>
+ <tileset firstgid="1319" name="Objects and Others" tilewidth="32" tileheight="32">
+  <image source="../graphics/Objects and Others.png" trans="000000" width="224" height="1376"/>
+ </tileset>
+ <layer name="Ground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7XTUQqAMAwD0IH70PvforfxQsOBFELsHKzZR9D99KFL7SjFeu6FtJ6zvk/PVb+xpBE5bKkMD59VRht4uwy20FhxornRnagMnO+z/awweCablnB8FvaUu6Uw+Fu4w0qD+4TvGWO297sN1X3M/l20H0oD+8aGogPc5x0Gzo/uQ2X87UfWiHbxARiivzBsBwAA
+  </data>
+ </layer>
+ <layer name="Background" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC8WVwQrCMAyGW1bf/wk86W2vMM+C3jzN7WXWMgIx/dNkVfCHUMiyfEuTdiHsGod9TafPtaXXUPumVBtpZPGe/BoDsTQGmYdxS/WzOYbwjjqDsyxGyY8YJM445/hro3aNYWkSfFTLN4x7shnefnhyk+R+tXpffMSQ82MJ1SIZ5JMMLwfNsCa+V70MS0uOfTB7Ot89wpB1emb5KEPqHwytR2V+L8zk2W/NgZchpdWFOGjOehlaLb84Lzw/+pdxxpLv9TX2MxCLGOj7N1gT/chsBwAA
+  </data>
+ </layer>
+ <layer name="Foreground" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC9WUSwqAMAxEE+j9b1PXXsHPdQTtIlh0mqYfRR9kE2QeZWyJ7mwOLAvx7hxEcMhYGMB3ExPNnHbELks+cgg5Rw+edoxKH0Jt95bs2JHqPt6VZGoebRccMj3yU2h34euUnPPP1Hb05n+Q83jXdm9yZ+mVLw7kCtnL8a6vXO9ALqH1XUGeK6jnHcmACjZsBwAA
+  </data>
+ </layer>
+ <layer name="Collision" width="25" height="19">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC82UUQrAMAhD9f6XHvtqGTYmTQsL+Gd9UbQZERlDOcWOEsQ3zxXDUHpBeV0thtF5cWfPCM3rRv2K4e5WxUI+EL/zwvSy2jvGS8dQ93eHcUoOg33z9z7U2mrfDoNlqjehMtR/UGVU93eDUdVZeXj1AOjv/25sBwAA
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="25" height="19">
+  <object name="Westshire Marketplace" type="Warp" x="704" y="64" width="32" height="32">
+   <properties>
+    <property name="Map" value="Westshire Marketplace"/>
+    <property name="X" value="12"/>
+    <property name="Y" value="11"/>
+   </properties>
+  </object>
+  <object name="Westshire Marketplace" type="Warp" x="736" y="64" width="32" height="32">
+   <properties>
+    <property name="Map" value="Westshire Marketplace"/>
+    <property name="X" value="13"/>
+    <property name="Y" value="11"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

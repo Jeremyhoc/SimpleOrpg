@@ -44,7 +44,7 @@ public class Player {
 	}
 
 	public void setRef(String ref) {
-		this.ref = ref;
+		this.ref = ref.toLowerCase();
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class Player {
 	}
 
 	public void setMapRef(String mapRef) {
-		this.mapRef = mapRef;
+		this.mapRef = mapRef.toLowerCase();
 	}
 
 	public int getId() {

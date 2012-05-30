@@ -4,9 +4,9 @@ import java.net.Socket;
 
 import org.apache.log4j.Level;
 
+import com.openorpg.simpleorpg.common.NewTiledMap;
+import com.openorpg.simpleorpg.common.ResourceManager;
 import com.openorpg.simpleorpg.server.Player;
-import com.openorpg.simpleorpg.shared.NewTiledMap;
-import com.openorpg.simpleorpg.shared.ResourceManager;
 
 public class MoveHandler extends MessageHandler {
 	

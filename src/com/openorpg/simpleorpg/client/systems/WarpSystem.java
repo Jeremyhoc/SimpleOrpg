@@ -29,14 +29,13 @@ public class WarpSystem extends BaseEntityProcessingSystem {
 	protected void process(Entity e) {
 		Warp warp = warpMapper.get(e);
 		if (warp != null) {
-			logger.info("Warping to " + warp.getMapRef());
+			logger.info("Warping to " + warp.getMapRef() + " " + warp.getPosition());
 			ImmutableBag<Entity> maps = world.getGroupManager().getEntities("MAP");
 			
 			// Delete existing maps
 			for (int i=0; i<maps.size(); i++) {
 				Entity map = maps.get(i);
 				world.deleteEntity(map);
-				map.refresh();
 			}
 			
 			// Add the newly warped map

@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.shared;
+package com.openorpg.simpleorpg.common;
 
 import java.util.HashMap;
 
@@ -18,6 +18,7 @@ public class ResourceManager {
 	}
 	
 	public Resource getResource(String id, boolean headless) {
+		id = id.toLowerCase();
 		Resource resource = null;
 		ResourceFactory resourceFactory = ResourceFactory.getInstance();
 		
@@ -37,6 +38,7 @@ public class ResourceManager {
 	}
 	
 	public Resource getResource(String id) {
+		id = id.toLowerCase();
 		Resource resource = null;
 		ResourceFactory resourceFactory = ResourceFactory.getInstance();
 		
@@ -55,15 +57,9 @@ public class ResourceManager {
 		return resource;
 	}
 	
-	public boolean loadMusicResources() {
-		ResourceFactory resourceFactory = ResourceFactory.getInstance();
-		for (String resourceId : resourceFactory.getResourceIds("music")) {
-			getResource(resourceId);
-		}
-		return true;
-	}
-	
+
 	public void unloadResource(String id) {
+		id = id.toLowerCase();
 		resources.remove(id);
 	}
 

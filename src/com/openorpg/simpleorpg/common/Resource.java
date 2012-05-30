@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.shared;
+package com.openorpg.simpleorpg.common;
 
 public class Resource {
 	
