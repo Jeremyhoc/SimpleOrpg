@@ -158,9 +158,9 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 		key_tab = false;
 		c = null;
 		
-		if (key_esc) {
+		/*if (key_esc) {
 			container.exit();
-		}
+		}*/
 		
 		// Your movement
 		if (yourLocation != null) {
