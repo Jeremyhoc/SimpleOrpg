@@ -7,9 +7,9 @@ import java.util.HashMap;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import com.openorpg.simpleorpg.common.ResourceFactory;
 import com.openorpg.simpleorpg.server.Map;
 import com.openorpg.simpleorpg.server.Player;
-import com.openorpg.simpleorpg.shared.ResourceFactory;
 
 
 public abstract class MessageHandler {
@@ -25,6 +25,7 @@ public abstract class MessageHandler {
 	// Load in maps from the database
 	public static void init() {
 		for (String mapRef : ResourceFactory.getInstance().getResourceIds("tiledmap")) {
+			messageLogger.info(mapRef);
 			maps.put(mapRef, new Map());
 		}
 		

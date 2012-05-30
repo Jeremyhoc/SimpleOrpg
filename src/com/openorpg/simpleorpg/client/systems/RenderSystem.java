@@ -21,7 +21,7 @@ import com.openorpg.simpleorpg.client.components.Networking;
 import com.openorpg.simpleorpg.client.components.ResourceRef;
 import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Visibility;
-import com.openorpg.simpleorpg.shared.ResourceManager;
+import com.openorpg.simpleorpg.common.ResourceManager;
 @SuppressWarnings("deprecation")
 public class RenderSystem extends BaseEntitySystem {
 	private ComponentMapper<ResourceRef> resourceRefMapper;

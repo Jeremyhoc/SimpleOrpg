@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.shared;
+package com.openorpg.simpleorpg.common;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.openorpg.simpleorpg.shared.Resource.ResourceType;
+import com.openorpg.simpleorpg.common.Resource.ResourceType;
 
 public class ResourceFactory {
 	private final Logger logger = Logger.getLogger(getClass());
@@ -47,7 +47,8 @@ public class ResourceFactory {
 	
 
 	public Resource create(String id, boolean headless) throws SlickException {
-		Element resourceElement = resourceElements.get(id.toLowerCase());
+		id = id.toLowerCase();
+		Element resourceElement = resourceElements.get(id);
 		if (resourceElement == null) throw new RuntimeException("Cannot find ID " + id + " in XML document");
 		String type = resourceElement.getAttribute("type").toLowerCase();
 		String path = "resources/" + resourceElement.getAttribute("path");

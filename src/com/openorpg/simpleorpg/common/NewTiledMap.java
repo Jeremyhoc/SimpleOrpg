@@ -1,4 +1,4 @@
-package com.openorpg.simpleorpg.shared;
+package com.openorpg.simpleorpg.common;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;

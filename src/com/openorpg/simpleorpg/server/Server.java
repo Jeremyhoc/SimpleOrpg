@@ -8,10 +8,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.openorpg.simpleorpg.common.PropertiesLoader;
 import com.openorpg.simpleorpg.server.net.JoinGameHandler;
 import com.openorpg.simpleorpg.server.net.LeaveGameHandler;
 import com.openorpg.simpleorpg.server.net.MessageHandler;
-import com.openorpg.simpleorpg.shared.PropertiesLoader;
 
 public class Server {
 	private static final Logger logger = Logger.getLogger(Server.class);

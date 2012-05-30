@@ -17,9 +17,9 @@ public class JoinGameHandler extends MessageHandler {
 		String playerName = socket.getInetAddress().getHostAddress();
 		Player yourPlayer = new Player(playerName, 
 								   	   "knightImage", 
-								   	   "testmap");
+								   	   "Westshire3");
 		if ((int)(Math.random()*2) == 0) yourPlayer.setRef("mageImage");
-		yourPlayer.setLocation(5, 5);
+		yourPlayer.setLocation(10, 5);
 		
 		try {
 			sendTo(socket, "SET_REF:YOU," + yourPlayer.getRef());

@@ -18,8 +18,8 @@ import com.openorpg.simpleorpg.client.components.ResourceRef;
 import com.openorpg.simpleorpg.client.components.ChatBubble;
 import com.openorpg.simpleorpg.client.components.Timer;
 import com.openorpg.simpleorpg.client.components.Visibility;
-import com.openorpg.simpleorpg.shared.NewTiledMap;
-import com.openorpg.simpleorpg.shared.ResourceManager;
+import com.openorpg.simpleorpg.common.NewTiledMap;
+import com.openorpg.simpleorpg.common.ResourceManager;
 
 public class InputSystem extends BaseEntitySystem implements KeyListener {
 	private GameContainer container;
@@ -167,32 +167,41 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 			int newX = (int)yourLocation.getPosition().x, newY = (int)yourLocation.getPosition().y;
 			int oldX = (int)yourLocation.getPosition().x, oldY = (int)yourLocation.getPosition().y;
 			String moveMessage = "";
-			
-			if (key_up) {
-				moveMessage = "MOVE:UP";
-				newY -= 1;
-			} else if (key_down) {
-				moveMessage = "MOVE:DOWN";
-				newY += 1;
-			} else if (key_left) {
-				moveMessage = "MOVE:LEFT";
-				newX -= 1;
-			} else if (key_right) {
-				moveMessage = "MOVE:RIGHT";
-				newX += 1;
-			}
-			
+			// Check for collision & move the player
 			ImmutableBag<Entity> maps = world.getGroupManager().getEntities("MAP");
 			ResourceManager manager = ResourceManager.getInstance();
-			
-			if (key_up || key_down || key_left || key_right) {
-				// Check for collision & move the player
-				if (maps.get(0) != null) {
-					String mapResName = resourceRefMapper.get(maps.get(0)).getResourceName();
-					NewTiledMap map = (NewTiledMap)manager.getResource(mapResName).getObject();
+			if (maps.get(0) != null) {
+
+				
+				String mapResName = resourceRefMapper.get(maps.get(0)).getResourceName();
+				NewTiledMap map = (NewTiledMap)manager.getResource(mapResName).getObject();
+				String up = map.getMapProperty("Up", "");
+				String down = map.getMapProperty("Down", "");
+				String left = map.getMapProperty("Left", "");
+				String right = map.getMapProperty("Right", "");
+				if (key_up) {
+					moveMessage = "MOVE:UP";
+					newY -= 1;
+				} else if (key_down) {
+					moveMessage = "MOVE:DOWN";
+					newY += 1;
+				} else if (key_left) {
+					moveMessage = "MOVE:LEFT";
+					newX -= 1;
+				} else if (key_right) {
+					moveMessage = "MOVE:RIGHT";
+					newX += 1;
+				}
+				
+				if (key_up || key_down || key_left || key_right) {
 					// Bounds Check
-					if (newX <= map.getWidth() && newY <= map.getHeight() &&
-						newX >= -1 && newY >= -1) {
+					// If you're at an edge only allow you to go further if you're warping
+					if (newX < map.getWidth() && newY < map.getHeight() &&
+						newX > -1 && newY > -1 ||
+						newX == map.getWidth() && !right.equals("") ||
+						newY == map.getHeight() && !down.equals("") ||
+						newY == -1 && !up.equals("") ||
+						newX == -1 && !left.equals("")) {
 						// Collision Check
 						int collisionId;
 						try {
@@ -200,7 +209,6 @@ public class InputSystem extends BaseEntitySystem implements KeyListener {
 						} catch (Exception ex) { collisionId = 0; }
 						if (collisionId == 0) {
 							yourMovement = movementMapper.get(yourEntity);
-
 							if (yourMovement.isFinished()) {
 								// Prevent desyncing issues by 'freezing' the player at the warp/edge of map
 								if (oldX != -1 && oldY != -1 && oldX != map.getWidth() && oldY != map.getHeight()) {
