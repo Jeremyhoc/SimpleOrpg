@@ -3,6 +3,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Level;
 
+import com.openorpg.simpleorpg.common.PropertiesLoader;
 import com.openorpg.simpleorpg.server.Player;
 
 public class JoinGameHandler extends MessageHandler {
@@ -13,11 +14,13 @@ public class JoinGameHandler extends MessageHandler {
 	@Override
 	public void handleMessage(Socket socket) {
 		log(Level.DEBUG, MSG_TYPE.REC, socket, "JOIN_GAME");
+		String startMap = PropertiesLoader.getInstance().load("server.properties").getProperty("startmap", "");
+				
 		// Load the player from the database
 		String playerName = socket.getInetAddress().getHostAddress();
 		Player yourPlayer = new Player(playerName, 
 								   	   "knightImage", 
-								   	   "testmap");
+								   	   startMap);
 		if ((int)(Math.random()*2) == 0) yourPlayer.setRef("mageImage");
 		yourPlayer.setLocation(10, 5);
 		
