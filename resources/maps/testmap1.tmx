@@ -11,23 +11,23 @@
   <image source="../graphics/collision.png" width="64" height="32"/>
  </tileset>
  <layer name="Ground" width="25" height="19">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC1NkYGBQHMWjeBSP4lE8ikcxzTAAwJQ15WwHAAA=
+  <data encoding="base64" compression="zlib">
+   eJxTZGBgUBzFo3gUj+JRPIpHMc0wAMghPTw=
   </data>
  </layer>
  <layer name="Background" width="25" height="19">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC72UUQ6AMAhDuZL+6+5/K/0xIaSUbiM24cPN8OgIDDMbIT7FcxTxXwtnSEpexEA5M4Yi5kVlHIsc9L0rlJu9paLrjTswYs2dHjyn4nmdTRzE3ZU6V12cPz2puyCTnx/Uw2p2Ot6P5WN9W+VUTMSbya/scyN3jJfNJfNV1afsK9Yf1a/iNZuV1Rp9vgf4VK3qbAcAAA==
+  <data encoding="base64" compression="zlib">
+   eJy9VFsKwDAI8yo7wh6/W+9/q+1nUCTGTGQBP2pLYio6zGy4eOHzKPxbczkEhRdpIM5IQwHzomqsRR10VrGA3B5ws79UcD5xTWdUc8VDBu8l09kCniPJsX50+VHnqkvnT0/qLogwzw/qYTY7Hf/H+FjfqjqZJtL7wq/scyN3TC+aS+Yrq0/ZV6w/ql/FazQr1Rpnvhu6ajH7
   </data>
  </layer>
  <layer name="Foreground" width="25" height="19">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC72UUQ7AIAhDPdaS7f7n2j63hgLVuiZ8+CGPgjjGV4cYeDc7K2IcJ4NxovOqotxZLzs6n7iAgTU7Pbw5FW8HJ+I6GPi+HLNhnD89sf3ZxWFs5z/A9nKVp3pQWVVOhze2l5mvqr7Of5XNp+u345XtymyNVa9Ryhwi/g10ZZYqbAcAAA==
+  <data encoding="base64" compression="zlib">
+   eJy9lFEOwCAIQz3Wku3+59o+t4YC1bomfPghj4I4xleHGHg3OytiHCeDcaLzqqLcWS87Op+4gIE1Oz28ORVvByfiOhj4vhyzYZw/PbH92cVhbOc/wPZylad6UFlVToc3tpeZr6q+zn+Vzafrt+OV7cpsjVWvUcocIv4NHZkp0A==
   </data>
  </layer>
  <layer name="Collision" width="25" height="19">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+XNwQ0AIAxCUUbr/lN574kKEqM/4corAHV4vYTBlDCmjtIrBus4usFwWSmHtVKO6k0Mxdt1WEv5Zz2n8dsWHf0Qf2wHAAA=
+  <data encoding="base64" compression="zlib">
+   eJzlzcENACAMQlFG6/5Tee+JChKjP+HKKwB1eL2EwZQwpo7SKwbrOLrBcFkph7VSjupNDMXbdVhL+Wc9p/HbFp/mREE=
   </data>
  </layer>
  <objectgroup name="Objects" width="25" height="19">
